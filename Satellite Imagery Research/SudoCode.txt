@@ -1,0 +1,93 @@
+------------------------------------------------------------------------------------------------
+PATH: C:\\Users\\deepb\\OneDrive\\Desktop\\Satellite Imagery Research\\Sample Images\\satellite2.png
+------------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------------------------------------------------------------
+Psuedo code to distinguish all the colors
+------------------------------------------------------------------------------------------------
+# scan image
+for pixel in image:
+
+# if pixel is dark green, fertility is high
+if pixel.color == 'dark green':
+fertility = high
+
+# if pixel is light green, fertility is medium
+elif pixel.color == 'light green':
+fertility = medium
+
+# if pixel is brown, fertility is low
+elif pixel.color == 'brown':
+fertility = low
+
+# if pixel is white, fertility is very low
+else:
+fertility = very low
+
+# output image with different colors for different fertility levels
+
+
+------------------------------------------------------------------------------------------------
+This gives an NDVI graph with different
+------------------------------------------------------------------------------------------------
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+
+# read the image
+image = cv2.imread('africa2.png')
+
+# extract the red, green and blue channels
+red = image[:,:,0]
+green = image[:,:,1]
+blue = image[:,:,2]
+
+# calculate the NDVI 
+ndvi = (red.astype(float)-blue.astype(float))/(red.astype(float)+blue.astype(float))
+
+# plot the NDVI image
+plt.imshow(ndvi, cmap='jet')
+plt.colorbar()
+plt.show()
+
+
+
+------------------------------------------------------------------------------------------------
+Nice code to try using the layout
+------------------------------------------------------------------------------------------------
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+
+# read the image
+img = cv2.imread('satellite2.png')
+
+# convert to grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# apply thresholding
+ret, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU)
+
+# find contours
+contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+# create a mask image
+mask = np.zeros(img.shape[:2], np.uint8)
+
+# fill the contours in the mask
+cv2.drawContours(mask, contours, -1, 255, -1)
+
+# apply mask and bitwise_and operator
+res = cv2.bitwise_and(img, img, mask = mask)
+
+# show the images
+plt.subplot(1, 3, 1), plt.imshow(img, cmap = 'gray')
+plt.title('Input image'), plt.xticks([]), plt.yticks([])
+plt.subplot(1, 3, 2), plt.imshow(mask, cmap = 'gray')
+plt.title('Mask'), plt.xticks([]), plt.yticks([])
+plt.subplot(1, 3, 3), plt.imshow(res, cmap = 'gray')
+plt.title('Result'), plt.xticks([]), plt.yticks([])
+
+plt.show()
