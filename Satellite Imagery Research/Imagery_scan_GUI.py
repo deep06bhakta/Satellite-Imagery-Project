@@ -13,6 +13,7 @@ import numpy as np
 ## This is the function that takes care of choosing a file to pass on to other funtions to scan images ##
 #########################################################################################################
 
+#figure out auto OS configuration 
 def browseFiles():
     filename = filedialog.askopenfilename(initialdir = "/",
                                           title = "Select a File",
